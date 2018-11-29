@@ -11,9 +11,9 @@ namespace TaobaoAuthorization.Configuration
         /// </summary>
         public string TaobaoOAuthUrl { get; set; }
         /// <summary>
-        /// 淘宝RedirectUrl跳转的Host，测试期间需设置该值与淘宝应用上配置的域名一致
+        /// 淘宝RedirectUri跳转的Host，测试期间需设置该值与淘宝应用上配置的域名一致
         /// </summary>
-        public string RedirectHost { get; set; }
+        public string RedirectUriHost { get; set; }
         /// <summary>
         /// 签名有效时间，单位分钟，默认5分钟
         /// </summary>

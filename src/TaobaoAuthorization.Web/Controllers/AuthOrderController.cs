@@ -36,13 +36,13 @@ namespace TaobaoAuthorization.Web.Controllers
         public async Task<ActionResult> Authorization([FromQuery]CreateAuthOrderInput input)
         {
             var order = await this._authOrderAppService.Create(input);
-            var redirectHost = this._appSettings.RedirectHost;
-            if (string.IsNullOrWhiteSpace(redirectHost))
+            var redirectUriHost = this._appSettings.RedirectUriHost;
+            if (string.IsNullOrWhiteSpace(redirectUriHost))
             {
-                redirectHost = $"{Request.Scheme}://{Request.Host}/{Request.PathBase}";
+                redirectUriHost = $"{Request.Scheme}://{Request.Host}/{Request.PathBase}";
             }
             var state = this.EncryptAuthState(order, input);
-            return Redirect($"{this._appSettings.TaobaoOAuthUrl}?response_type=code&client_id={input.AppKey}&redirect_uri={redirectHost.TrimEnd('/')}/Auth/Callback&state={state}&view={input.AuthView}");
+            return Redirect($"{this._appSettings.TaobaoOAuthUrl}?response_type=code&client_id={input.AppKey}&redirect_uri={redirectUriHost.TrimEnd('/')}/Auth/Callback&state={state}&view={input.AuthView}");
         }
         private string EncryptAuthState(AuthOrderDto order, CreateAuthOrderInput input)
         {
