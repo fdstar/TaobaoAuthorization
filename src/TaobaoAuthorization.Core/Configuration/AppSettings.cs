@@ -23,6 +23,10 @@ namespace TaobaoAuthorization.Configuration
         /// </summary>
         public string TripleDESKeyForAuthState { get; set; }
         /// <summary>
+        /// 获取到的淘宝Code过期时间，单位秒
+        /// </summary>
+        public int CodeExpiresIn { get; set; }
+        /// <summary>
         /// 获取TripleDES秘钥对应的数组
         /// </summary>
         /// <returns></returns>

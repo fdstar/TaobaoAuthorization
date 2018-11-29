@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,6 +20,7 @@ namespace TaobaoAuthorization.Web.Controllers
     [Route("Auth")]
     public class AuthOrderController : TaobaoAuthorizationControllerBase
     {
+        //淘宝授权说明页面 http://open.taobao.com/doc.htm?docId=102635&docType=1
         private readonly AppSettings _appSettings;
         private readonly IAuthOrderAppService _authOrderAppService;
         private readonly IPartnerAppService _partnerAppService;
@@ -107,6 +109,8 @@ namespace TaobaoAuthorization.Web.Controllers
                         dic.Add("SignData", signData);
                         var queryString = QueryString.Create(dic);
                         return Redirect($"{order.RedirectUri}{queryString}");
+                        //回调页面可以直接在后端通过TopSdk中的TopAuthTokenCreateRequest来获取AccessToken
+                        //code只能被使用一次，且时限较短
                     }
                 }
             }
@@ -117,14 +121,18 @@ namespace TaobaoAuthorization.Web.Controllers
             };
         }
         [HttpGet("GetCode")]
+        [DontWrapResult]
         public async Task<string> GetTaobaoCode([FromQuery]GetAuthOrderInput input)
         {
             var order = await this._authOrderAppService.Get(input);
-            if (order != null)
+            if (order != null
+                && !string.IsNullOrWhiteSpace(order.TaobaoCode)
+                && order.LastModificationTime > DateTime.Now.AddSeconds(-this._appSettings.CodeExpiresIn))
             {
+                //获取到的Code有时效性，虽然暂时还不清楚这时效性是多长，只能说比较短
                 return order.TaobaoCode;
             }
-            return null;
+            return string.Empty;//统一200返回，客户端根据是否为空来判断Code是否获取成功
         }
     }
 }
