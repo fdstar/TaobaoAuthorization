@@ -40,12 +40,40 @@ namespace TaobaoAuthorization
                 encoding = Encoding.UTF8;
             }
             var buff = ComputeHash(encoding.GetBytes(inputString));
+            return ConvertToString(buff, upper);
+        }
+        /// <summary>
+        /// 将byte数组转化为0X格式的字符串
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="upper"></param>
+        /// <returns></returns>
+        public static string ConvertToString(byte[] data, bool upper = true)
+        {
             StringBuilder tmp = new StringBuilder();
-            for (int i = 0; i < buff.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                tmp.Append(buff[i].ToString(upper ? "X2" : "x2"));
+                tmp.Append(data[i].ToString(upper ? "X2" : "x2"));
             }
             return tmp.ToString();
+        }
+        /// <summary>
+        /// 将0x格式的字符串转化为byte数组
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static byte[] ConvertStringToByte(string str)
+        {
+            if (str == null || str.Length % 2 != 0)
+            {
+                throw new ArgumentException();
+            }
+            var data = new byte[str.Length / 2];
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = Convert.ToByte(str.Substring(i * 2, 2), 16);
+            }
+            return data;
         }
     }
     /// <summary>

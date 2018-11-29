@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TaobaoAuthorization.Authorizations;
@@ -37,17 +39,42 @@ namespace TaobaoAuthorization.Web.Controllers
             {
                 redirectHost = $"{Request.Scheme}://{Request.Host}/{Request.PathBase}";
             }
-            return Redirect($"{this._appSettings.TaobaoOAuthUrl}?response_type=code&client_id={input.AppKey}&redirect_uri={redirectHost.TrimEnd('/')}/Auth/Callback&state={order.Id}_{input.AuthState}&view={input.AuthView}");
+            var state = this.EncryptAuthState(order, input);
+            return Redirect($"{this._appSettings.TaobaoOAuthUrl}?response_type=code&client_id={input.AppKey}&redirect_uri={redirectHost.TrimEnd('/')}/Auth/Callback&state={state}&view={input.AuthView}");
+        }
+        private string EncryptAuthState(AuthOrderDto order, CreateAuthOrderInput input)
+        {
+            var state = $"{order.Id}_{input.AuthState}_{DateTime.Now.ToString("fff")}";
+            var encryptData = TripleDESHelper.Encrypt(Encoding.UTF8.GetBytes(state), this._appSettings.GetTripleDESKeyData(), null, CipherMode.ECB, PaddingMode.PKCS7);
+            return MD5Helper.ConvertToString(encryptData);
+        }
+        private bool ValidAuthState(string state, out long id, out string authState)
+        {
+            id = 0;
+            authState = null;
+            try
+            {
+                var data = MD5Helper.ConvertStringToByte(state);
+                data = TripleDESHelper.Decrypt(data, this._appSettings.GetTripleDESKeyData(), null, CipherMode.ECB, PaddingMode.PKCS7);
+                var origStr = Encoding.UTF8.GetString(data);
+                if (!string.IsNullOrWhiteSpace(origStr) && Regex.IsMatch(origStr, @"^\d+_"))
+                {
+                    var idxS = origStr.IndexOf('_');
+                    var idxE = origStr.LastIndexOf('_');
+                    id = long.Parse(origStr.Substring(0, idxS));
+                    authState = origStr.Substring(idxS + 1, idxE - idxS - 1);
+                    return true;
+                }
+            }
+            catch { }
+            return false;
         }
         [HttpGet("Callback")]
         public async Task<ActionResult> Callback(string code, string state, string error, string error_description)
         {
             var authed = false;
-            if (!string.IsNullOrWhiteSpace(state) && Regex.IsMatch(state, @"^\d+_"))
+            if (this.ValidAuthState(state, out long id, out string authState))
             {
-                var idx = state.IndexOf('_');
-                var id = long.Parse(state.Substring(0, idx));
-                var authState = state.Substring(idx + 1);
                 var order = await this._authOrderAppService.Get(new EntityDto<long>(id));
                 if (order != null && order.AuthState == authState && string.IsNullOrWhiteSpace(order.TaobaoCode))
                 {
@@ -55,6 +82,8 @@ namespace TaobaoAuthorization.Web.Controllers
                     {
                         authed = true;
                         order.TaobaoCode = code;
+                        order.Error = string.Empty;
+                        order.ErrorDescription = string.Empty;
                     }
                     else if (string.IsNullOrWhiteSpace(error))
                     {

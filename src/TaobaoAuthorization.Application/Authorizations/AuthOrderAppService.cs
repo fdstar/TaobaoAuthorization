@@ -5,6 +5,7 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaobaoAuthorization.Authorizations.Dto;
@@ -50,7 +51,7 @@ namespace TaobaoAuthorization.Authorizations
                     order.TaobaoCode = string.Empty;
                     await this.Repository.UpdateAsync(order);
                 }
-                else
+                else if (!string.IsNullOrEmpty(order.TaobaoCode))
                 {
                     throw new UserFriendlyException(L("AreadyAuthed"));
                 }
@@ -77,6 +78,21 @@ namespace TaobaoAuthorization.Authorizations
                 return null;
             }
             throw new ApplicationException(L("VerifySignatureFail"));
+        }
+
+        protected override IQueryable<AuthOrder> CreateFilteredQuery(GetAuthOrderFilterDto input)
+        {
+            var query = base.CreateFilteredQuery(input);
+            query = query.Where(o => o.PartnerId == input.PartnerId);
+            if (input.AppKey.HasValue && input.AppKey > 0)
+            {
+                query = query.Where(o => o.AppKey == input.AppKey);
+            }
+            if (!string.IsNullOrWhiteSpace(input.AuthState))
+            {
+                query = query.Where(o => o.AuthState == input.AuthState);
+            }
+            return query;
         }
     }
 }
