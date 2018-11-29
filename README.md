@@ -38,3 +38,4 @@ GO
 * Open solution in Visual Studio 2017
 * Set .Web project as Startup Project and build the project.
 * Run the application.
+* View `http://localhost:62114/Auth/Authorization?PartnerKey=Partner001&RequestTime=20181129145050&SignType=SHA1&AppKey=25297011&AuthState=12345678&SignData=123456&ForceReAuth=1`
