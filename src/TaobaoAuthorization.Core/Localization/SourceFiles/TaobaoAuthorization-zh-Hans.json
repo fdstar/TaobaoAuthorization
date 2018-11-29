@@ -1,0 +1,20 @@
+﻿{
+  "culture": "zh-Hans",
+  "texts": {
+    "HelloWorld": "Hello World!",
+    "ChangeLanguage": "选择语言",
+    "HomePage": "首页",
+    "About": "关于",
+    "Home_Description": "欢迎使用淘宝授权...",
+    "About_Description": "这是一个通用的用户对淘宝应用授权的模板",
+
+    "ArgumentError": "参数错误",
+
+    "NoData": "未能找到数据",
+    "VerifySignatureFail": "签名验证失败",
+    "AreadyAuthed": "用户已授权",
+    "AuthRefused": "用户拒绝授权",
+    "PartnerDisabled": "该合作号已被禁用",
+    "RequestTimeout": "请求已无效"
+  }
+}
