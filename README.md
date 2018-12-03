@@ -31,7 +31,22 @@ INSERT INTO [dbo].[Partners]
            ,'1234567890'
            ,'测试合作号'
            ,0)
-GO
+```
+
+*Mysql*
+``` Sql
+INSERT INTO `Partners`
+           (`CreationTime`
+           ,`PartnerKey`
+           ,`SecretKey`
+           ,`PartnerName`
+           ,`IsDisabled`)
+     VALUES
+           (now()
+           ,'Partner001'
+           ,'1234567890'
+           ,'测试合作号'
+           ,0)
 ```
 
 ## How To Run

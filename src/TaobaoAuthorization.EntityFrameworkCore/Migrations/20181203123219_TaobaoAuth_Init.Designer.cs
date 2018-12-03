@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaobaoAuthorization.EntityFrameworkCore;
@@ -10,7 +9,7 @@ using TaobaoAuthorization.EntityFrameworkCore;
 namespace TaobaoAuthorization.Migrations
 {
     [DbContext(typeof(TaobaoAuthorizationDbContext))]
-    [Migration("20181128114327_TaobaoAuth_Init")]
+    [Migration("20181203123219_TaobaoAuth_Init")]
     partial class TaobaoAuth_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,14 +17,12 @@ namespace TaobaoAuthorization.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("TaobaoAuthorization.Authorizations.AuthOrder", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<long>("AppKey");
 
@@ -74,8 +71,7 @@ namespace TaobaoAuthorization.Migrations
             modelBuilder.Entity("TaobaoAuthorization.Partners.Partner", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreationTime");
 

@@ -10,7 +10,8 @@ namespace TaobaoAuthorization.EntityFrameworkCore
             )
         {
             /* This is the single point to configure DbContextOptions for TaobaoAuthorizationDbContext */
-            dbContextOptions.UseSqlServer(connectionString);
+            //dbContextOptions.UseSqlServer(connectionString);
+            dbContextOptions.UseMySql(connectionString);
         }
     }
 }
