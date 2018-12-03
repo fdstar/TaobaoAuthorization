@@ -13,6 +13,7 @@ using ASP.NET Core and EntityFramework Core.
 * Add-Migration -Name "TaobaoAuth_Init" -Context "TaobaoAuthorization.EntityFrameworkCore.TaobaoAuthorizationDbContext" -Project "TaobaoAuthorization.EntityFrameworkCore" -StartupProject "TaobaoAuthorization.Web"
 * Remove-Migration -Context "TaobaoAuthorization.EntityFrameworkCore.TaobaoAuthorizationDbContext" -Project "TaobaoAuthorization.EntityFrameworkCore" -StartupProject "TaobaoAuthorization.Web"
 * Update-Database -Context "TaobaoAuthorization.EntityFrameworkCore.TaobaoAuthorizationDbContext" -Project "TaobaoAuthorization.EntityFrameworkCore" -StartupProject "TaobaoAuthorization.Web"
+* Script-Migration -Output D:\TaobaoAuth_Init.sql -Context "TaobaoAuthorization.EntityFrameworkCore.TaobaoAuthorizationDbContext" -Project "TaobaoAuthorization.EntityFrameworkCore" -StartupProject "TaobaoAuthorization.Web"
 * **get-help**
 
 ## Seed Sql
