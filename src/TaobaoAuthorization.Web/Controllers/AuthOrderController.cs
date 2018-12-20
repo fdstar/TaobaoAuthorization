@@ -87,7 +87,7 @@ namespace TaobaoAuthorization.Web.Controllers
                         order.Error = string.Empty;
                         order.ErrorDescription = string.Empty;
                     }
-                    else if (string.IsNullOrWhiteSpace(error))
+                    else if (!string.IsNullOrWhiteSpace(error))
                     {
                         order.Error = error;
                         order.ErrorDescription = error_description;
