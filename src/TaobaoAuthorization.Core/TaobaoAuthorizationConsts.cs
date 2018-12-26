@@ -4,6 +4,8 @@
     {
         public const string LocalizationSourceName = "TaobaoAuthorization";
 
-        public const string ConnectionStringName = "Default";
+        public const string DefaultConnectionStringName = "Default";
+
+        public const string AuthorizedConnectionStringName = "Authorized";
     }
 }

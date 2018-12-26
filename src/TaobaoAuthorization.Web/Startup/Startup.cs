@@ -37,6 +37,8 @@ namespace TaobaoAuthorization.Web.Startup
                 //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            services.AddSession();
+
             //Configure Abp and Dependency Injection
             return services.AddAbp<TaobaoAuthorizationWebModule>(options =>
             {
@@ -50,6 +52,8 @@ namespace TaobaoAuthorization.Web.Startup
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework.
+
+            app.UseSession();
 
             if (env.IsDevelopment())
             {

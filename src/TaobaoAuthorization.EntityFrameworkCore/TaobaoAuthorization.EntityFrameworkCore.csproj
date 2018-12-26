@@ -17,6 +17,7 @@
   <ItemGroup>
     <Compile Remove="Migrations\20180927070638_Upgrade_ABP_3.8.3.cs" />
     <Compile Remove="Migrations\20181128031432_TaobaoAuth_Init.cs" />
+    <Compile Remove="Migrations\TaobaoAuthorizedDb\20181226012715_TaobaoAuthed_Init.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TaobaoAuthorization.Core\TaobaoAuthorization.Core.csproj" />

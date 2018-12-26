@@ -114,11 +114,8 @@ namespace TaobaoAuthorization.Web.Controllers
                     }
                 }
             }
-            return new ContentResult()
-            {
-                ContentType = "text/plain",
-                Content = authed ? L("AreadyAuthed") : L("AuthRefused")
-            };
+            ViewBag.Message = authed ? L("AreadyAuthed") : L("AuthRefused");
+            return View();
         }
         [HttpGet("GetCode")]
         [DontWrapResult]

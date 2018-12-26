@@ -24,7 +24,7 @@ namespace TaobaoAuthorization.Web.Startup
 
         public override void PreInitialize()
         {
-            Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(TaobaoAuthorizationConsts.ConnectionStringName);
+            Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(TaobaoAuthorizationConsts.DefaultConnectionStringName);
 
             Configuration.Navigation.Providers.Add<TaobaoAuthorizationNavigationProvider>();
 

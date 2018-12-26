@@ -16,10 +16,26 @@ namespace TaobaoAuthorization.EntityFrameworkCore
 
             DbContextOptionsConfigurer.Configure(
                 builder,
-                configuration.GetConnectionString(TaobaoAuthorizationConsts.ConnectionStringName)
+                configuration.GetConnectionString(TaobaoAuthorizationConsts.DefaultConnectionStringName)
             );
 
             return new TaobaoAuthorizationDbContext(builder.Options);
+        }
+    }
+
+    public class TaobaoAuthorizedDbContextFactory : IDesignTimeDbContextFactory<TaobaoAuthorizedDbContext>
+    {
+        public TaobaoAuthorizedDbContext CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<TaobaoAuthorizedDbContext>();
+            var configuration = AppConfigurations.Get(WebContentDirectoryFinder.CalculateContentRootFolder());
+
+            DbContextOptionsConfigurer.Configure(
+                builder,
+                configuration.GetConnectionString(TaobaoAuthorizationConsts.AuthorizedConnectionStringName)
+            );
+
+            return new TaobaoAuthorizedDbContext(builder.Options);
         }
     }
 }
