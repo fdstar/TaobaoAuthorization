@@ -18,13 +18,22 @@ namespace TaobaoAuthorization.EntityFrameworkCore
 
         public override string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
-            if (args["DbContextConcreteType"] as Type == typeof(TaobaoAuthorizedDbContext))
+            var connectStringName = this.GetConnectionStringName(args);
+            if (connectStringName != null)
             {
                 var configuration = AppConfigurations.Get(WebContentDirectoryFinder.CalculateContentRootFolder());
-                return configuration.GetConnectionString(TaobaoAuthorizationConsts.AuthorizedConnectionStringName);
+                return configuration.GetConnectionString(connectStringName);
             }
-
             return base.GetNameOrConnectionString(args);
+        }
+        private string GetConnectionStringName(ConnectionStringResolveArgs args)
+        {
+            var type = args["DbContextConcreteType"] as Type;
+            if (type == typeof(TaobaoAuthorizedDbContext))
+            {
+                return TaobaoAuthorizationConsts.AuthorizedConnectionStringName;
+            }
+            return null;
         }
     }
 }
