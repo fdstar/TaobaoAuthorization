@@ -40,7 +40,7 @@ namespace TaobaoAuthorization.Partners
 
         public Task<string> GetSignData(Partner partner, SortedDictionary<string, string> args, string algorithm = "SHA1", params string[] removeKeys)
         {
-            return Task.FromResult(SignatureHelper.GetSignData(partner.SecretKey, args, algorithm, removeKeys));
+            return Task.FromResult(SignatureHelper.GetSignData(partner.SecretKey, args, algorithm, null, null, "UTF-8", removeKeys));
         }
 
         public Task<bool> VerifyData(Partner partner, SortedDictionary<string, string> args, string compareData, string algorithm = "SHA1", params string[] removeKeys)
@@ -48,7 +48,7 @@ namespace TaobaoAuthorization.Partners
 #if DEBUG
             return Task.FromResult(true);
 #endif
-            return Task.FromResult(SignatureHelper.VerifyData(partner.SecretKey, compareData, args, algorithm, removeKeys));
+            return Task.FromResult(SignatureHelper.VerifyData(partner.SecretKey, compareData, args, algorithm, null, null, "UTF-8", removeKeys));
         }
     }
 }
