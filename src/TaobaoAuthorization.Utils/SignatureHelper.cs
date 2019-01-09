@@ -43,7 +43,7 @@ namespace TaobaoAuthorization
         /// <param name="dto">待签名的实体</param>
         /// <param name="dicFunc">将实体转化为字典的委托，如果不传递则默认使用<see cref="GetDictionary{T}(T)"/>方法进行转换</param>
         /// <param name="algorithm">算法名称，默认SHA1</param>
-        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出</param>
+        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出，如果输入了委托，并且委托结果返回null，则该value将不参与签名</param>
         /// <param name="signFunc">签名结果如何输出成字符串委托，默认转换成大写的16进制格式字符串</param>
         /// <param name="encodingName">字符串转换为byte[]时采用的编码，默认UTF-8</param>
         /// <param name="ignoreProps">签名时要忽略的属性名集合</param>
@@ -63,7 +63,7 @@ namespace TaobaoAuthorization
         /// <param name="secretKey">签名秘钥</param>
         /// <param name="args">待签名的字典数据</param>
         /// <param name="algorithm">算法名称，默认SHA1</param>
-        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出</param>
+        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出，如果输入了委托，并且委托结果返回null，则该value将不参与签名</param>
         /// <param name="signFunc">签名结果如何输出成字符串委托，默认转换成大写的16进制格式字符串</param>
         /// <param name="encodingName">字符串转换为byte[]时采用的编码，默认UTF-8</param>
         /// <param name="removeKeys">不参与签名的Key集合，不传递则使用<see cref="defaultRemoveKeysWhenSign"/></param>
@@ -81,10 +81,20 @@ namespace TaobaoAuthorization
                 {
                     continue;
                 }
+                var value = kv.Value;
+                if (valueFunc != null)
+                {
+                    value = valueFunc(kv.Value);
+                    if (value == null)
+                    {
+                        continue;
+                    }
+                }
+                
                 tmp.Append('&');
                 tmp.Append(kv.Key);
                 tmp.Append('=');
-                tmp.Append(valueFunc?.Invoke(kv.Value) ?? kv.Value);
+                tmp.Append(value);
             }
             if (tmp.Length > 0)
             {
@@ -108,7 +118,7 @@ namespace TaobaoAuthorization
         /// <param name="dto">待签名的实体</param>
         /// <param name="dicFunc">将实体转化为字典的委托，如果不传递则默认使用<see cref="GetDictionary{T}(T)"/>方法进行转换</param>
         /// <param name="algorithm">算法名称，默认SHA1</param>
-        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出</param>
+        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出，如果输入了委托，并且委托结果返回null，则该value将不参与签名</param>
         /// <param name="signFunc">签名结果如何输出成字符串委托，默认转换成大写的16进制格式字符串</param>
         /// <param name="encodingName">字符串转换为byte[]时采用的编码，默认UTF-8</param>
         /// <param name="ignoreProps">签名时要忽略的属性名集合</param>
@@ -124,7 +134,7 @@ namespace TaobaoAuthorization
         /// <param name="compareData">要比较的签名字符串 base64格式</param>
         /// <param name="args">待签名的字典数据</param>
         /// <param name="algorithm">算法名称，默认SHA1</param>
-        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出</param>
+        /// <param name="valueFunc">签名时value部分如何转换委托，默认原样输出，如果输入了委托，并且委托结果返回null，则该value将不参与签名</param>
         /// <param name="signFunc">签名结果如何输出成字符串委托，默认转换成大写的16进制格式字符串</param>
         /// <param name="encodingName">字符串转换为byte[]时采用的编码，默认UTF-8</param>
         /// <param name="removeKeys">不参与签名的Key集合，不传递则使用<see cref="defaultRemoveKeysWhenSign"/></param>
